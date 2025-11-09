@@ -1,7 +1,7 @@
 # 🌦️ Weather — Sistema de Análise Meteorológica e Processamento de Dados em Larga Escala
 
 O **Weather** é um sistema completo de **análise meteorológica** e **processamento massivo de dados** coletados por **estações IoT**.  
-Ele permite o **upload de arquivos de telemetria (.dat / TOA5)**, processa os dados no **backend Spring Boot 3**, armazena em **MySQL**, e exibe gráficos e estatísticas interativas no **frontend React + PrimeReact + Next.js**.
+Ele permite o **upload de arquivos de telemetria (.dat / TOA5)**, processa os dados no **backend Spring Boot 3**, armazena em **MySQL**, exibe gráficos e estatísticas interativas no **frontend React + PrimeReact + Next.js** e principalmente exporta os dados em arquivos excel para processsamento e análises internas um em sistema externos que necessita dessas informações previamente processados em média por período (exibindo as médias por dia) ou hora a hora de um determinado dia .
 
 ---
 
