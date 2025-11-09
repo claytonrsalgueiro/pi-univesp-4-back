@@ -1,0 +1,36 @@
+@use "sass:meta";
+@use 'mixins' as mixins;
+
+$colors: (
+    'blue': #1992D4,
+    'green': #27AB83,
+    'yellow': #F9C404,
+    'cyan': #00B9C6,
+    'pink': #C74B95,
+    'indigo': #4C63B6,
+    'teal': #00AE99,
+    'orange': #DE911D,
+    'bluegray': #676C7E,
+    'purple': #BA6FF4,
+    'red': #94242B,
+    'primary': #94242B,
+);
+
+:root {
+    @if meta.variable-exists(colors) {
+        @each $name, $color in $colors {
+            @for $i from 0 through 5 {
+                @if ($i == 0) {
+                    --#{$name}-50:#{mixins.tint($color, ((5 - $i) * 19%))};
+                }
+                @else {
+                    --#{$name}-#{$i * 100}:#{mixins.tint($color, ((5 - $i) * 19%))};
+                }
+            }
+
+            @for $i from 1 through 4 {
+                --#{$name}-#{($i + 5) * 100}:#{mixins.shade($color, ($i * 15%))};
+            }
+        }
+    }
+}

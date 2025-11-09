@@ -1,0 +1,101 @@
+@use 'sass:math';
+@use 'sass:list';
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/form' as form;
+@use '../../../theme-light/red/variables/menu' as menu;
+@use '../../../theme-light/red/variables/button' as button;
+@use '../../mixins' as mixins;
+
+.p-autocomplete {
+    .p-autocomplete-loader {
+        right: list.nth(form.$inputPadding, 2); 
+    }
+
+    &.p-autocomplete-dd {
+        .p-autocomplete-loader {
+            right: list.nth(form.$inputPadding, 2) + button.$buttonIconOnlyWidth;
+        }
+    }
+    
+    .p-autocomplete-multiple-container {
+        padding: math.div(list.nth(form.$inputPadding, 1), 2) list.nth(form.$inputPadding, 2);
+        gap: general.$inlineSpacing;
+        
+        &:not(.p-disabled):hover {
+            border-color: form.$inputHoverBorderColor;
+        }
+
+        &:not(.p-disabled).p-focus {
+            @include mixins.focused-input();
+        }
+
+        .p-autocomplete-input-token {
+            padding: math.div(list.nth(form.$inputPadding, 1), 2) 0;
+            
+            input {
+                font-family: var(--font-family);
+                font-feature-settings: var(--font-feature-settings, normal);
+                font-size: form.$inputTextFontSize;
+                color: general.$textColor;
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+        .p-autocomplete-token {
+            padding: math.div(list.nth(form.$inputPadding, 1), 2) list.nth(form.$inputPadding, 2);
+            margin-right: general.$inlineSpacing;
+            background: general.$highlightBg;
+            color: general.$highlightTextColor;
+            border-radius: general.$borderRadius;
+
+            .p-autocomplete-token-icon {
+                margin-left: general.$inlineSpacing;
+            }
+        }
+    }
+
+    &.p-invalid.p-component > .p-inputtext {
+        @include mixins.invalid-input();
+    }
+}
+
+.p-autocomplete-panel {
+    background: form.$inputOverlayBg;
+    color: form.$inputListTextColor;
+    border: form.$inputOverlayBorder;
+    border-radius: general.$borderRadius;
+    box-shadow: form.$inputOverlayShadow;
+
+    .p-autocomplete-items {
+        padding: form.$inputListPadding;
+
+        .p-autocomplete-item {
+            margin: form.$inputListItemMargin;
+            padding: form.$inputListItemPadding;
+            border: form.$inputListItemBorder;
+            color: form.$inputListItemTextColor;
+            background: form.$inputListItemBg;
+            transition: general.$listItemTransition;
+            border-radius: form.$inputListItemBorderRadius;
+
+            &:hover {
+                color: form.$inputListItemTextHoverColor;
+                background: form.$inputListItemHoverBg;
+            }
+
+            &.p-highlight {
+                color: general.$highlightTextColor;
+                background: general.$highlightBg;
+            }
+        }
+
+        .p-autocomplete-item-group {
+            margin: menu.$submenuHeaderMargin;
+            padding: menu.$submenuHeaderPadding;
+            color: menu.$submenuHeaderTextColor;
+            background: menu.$submenuHeaderBg;
+            font-weight: menu.$submenuHeaderFontWeight;
+        }
+    }
+}

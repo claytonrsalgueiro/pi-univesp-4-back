@@ -1,0 +1,22 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/misc' as misc;
+@use '../../../theme-light/red/variables/form' as form;
+@use '../../mixins' as mixins;
+
+.p-inplace {
+    .p-inplace-display {
+        padding: misc.$inplacePadding;
+        border-radius: general.$borderRadius;
+        transition: general.$formElementTransition;
+
+        &:not(.p-disabled):hover {
+            background: misc.$inplaceHoverBg;
+            color: misc.$inplaceTextHoverColor;
+        }
+
+        &:focus {
+            @include mixins.focused();
+        }
+    }
+}
+

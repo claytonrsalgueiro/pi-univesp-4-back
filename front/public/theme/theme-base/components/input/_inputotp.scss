@@ -1,0 +1,14 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/form' as form;
+@use 'sass:list';
+
+.p-inputotp {
+    display: flex;
+    align-items: center;
+    gap: general.$inlineSpacing;
+}
+
+.p-inputotp-input {
+    text-align: center;
+    width: 2 * list.nth(form.$inputPadding, 2) + 1rem;
+}

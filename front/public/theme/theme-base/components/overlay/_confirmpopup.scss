@@ -1,0 +1,78 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/overlay' as overlay;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use 'sass:list';
+@use 'sass:color';
+
+.p-confirm-popup {
+    background: overlay.$overlayContentBg;
+    color: panel.$panelContentTextColor;
+    border: overlay.$overlayContentBorder;
+    border-radius: general.$borderRadius;
+    box-shadow: overlay.$overlayContainerShadow;
+
+    .p-confirm-popup-content {
+        padding: overlay.$confirmPopupContentPadding;
+    }
+
+    .p-confirm-popup-footer {
+        text-align: right;
+        padding: overlay.$confirmPopupFooterPadding;
+
+        button {
+            margin: 0 general.$inlineSpacing 0 0;
+            width: auto;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+
+    &:after {
+        border: solid transparent;
+        border-color: rgba(overlay.$overlayContentBg, 0);
+        border-bottom-color: overlay.$overlayContentBg;
+    }
+
+    &:before {
+        border: solid transparent;
+
+        @if (list.nth(overlay.$overlayContentBorder, 2) == 'none') {
+            border-color: rgba(overlay.$overlayContentBg, 0);
+            border-bottom-color: color.scale(overlay.$overlayContentBg, $lightness: -5%);
+        }
+        @else {
+            border-color: rgba(list.nth(overlay.$overlayContentBorder, 3), 0);
+            border-bottom-color: color.scale(list.nth(overlay.$overlayContentBorder, 3), $lightness: -5%);
+        }
+    }
+
+    &.p-confirm-popup-flipped {
+        &:after {
+            border-top-color: overlay.$overlayContentBg;
+        }
+
+        &:before {
+            @if (list.nth(overlay.$overlayContentBorder, 2) == 'none') {
+                border-top-color: overlay.$overlayContentBg;
+            }
+            @else {
+                border-top-color: list.nth(overlay.$overlayContentBorder, 3);
+            }
+        }
+    }
+
+    .p-confirm-popup-icon {
+        font-size: general.$primeIconFontSize * 1.5;
+
+        &.p-icon {
+            width: general.$primeIconFontSize * 1.5;
+            height: general.$primeIconFontSize * 1.5;
+        }
+    }
+
+    .p-confirm-popup-message {
+        margin-left: general.$inlineSpacing * 2;
+    }
+}

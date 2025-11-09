@@ -1,0 +1,50 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/data' as data;
+
+.p-datascroller {
+    .p-paginator-top {
+        border-width: data.$tableTopPaginatorBorderWidth;
+        border-radius: 0;
+    }
+
+    .p-paginator-bottom {
+        border-width: data.$tableBottomPaginatorBorderWidth;
+        border-radius: 0;
+    }
+
+    .p-datascroller-header {
+        background: data.$tableHeaderBg;
+        color: data.$tableHeaderTextColor;
+        border: data.$tableHeaderBorder;
+        border-width: data.$tableHeaderBorderWidth;
+        padding: data.$tableHeaderPadding;
+        font-weight: data.$tableHeaderFontWeight;
+    }
+
+    .p-datascroller-content {
+        background: data.$tableBodyRowBg;
+        color: data.$tableBodyRowTextColor;
+        border: data.$dataViewContentBorder;
+        padding: data.$dataViewContentPadding;
+    }
+
+    &.p-datascroller-inline {
+        .p-datascroller-list {
+            > li {
+                border: data.$dataViewListItemBorder;
+                border-width: data.$dataViewListItemBorderWidth;
+            }
+        }
+    }
+
+    .p-datascroller-footer {
+        background: data.$tableFooterBg;
+        color: data.$tableFooterTextColor;
+        border: data.$tableFooterBorder;
+        border-width: data.$tableFooterBorderWidth;
+        padding: data.$tableFooterPadding;
+        font-weight: data.$tableFooterFontWeight;
+        border-bottom-left-radius: general.$borderRadius;
+        border-bottom-right-radius: general.$borderRadius;
+    }
+}

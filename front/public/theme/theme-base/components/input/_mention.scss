@@ -1,0 +1,34 @@
+@use '../../../theme-light/red/variables/form' as form;
+@use '../../../theme-light/red/variables/general' as general;
+
+.p-mention-panel {
+    background: form.$inputOverlayBg;
+    color: form.$inputListTextColor;
+    border: form.$inputOverlayBorder;
+    border-radius: general.$borderRadius;
+    box-shadow: form.$inputOverlayShadow;
+
+    .p-mention-items {
+        padding: form.$inputListPadding;
+
+        .p-mention-item {
+            margin: form.$inputListItemMargin;
+            padding: form.$inputListItemPadding;
+            border: form.$inputListItemBorder;
+            color: form.$inputListItemTextColor;
+            background: form.$inputListItemBg;
+            transition: general.$listItemTransition;
+            border-radius: form.$inputListItemBorderRadius;
+
+            &:hover {
+                color: form.$inputListItemTextHoverColor;
+                background: form.$inputListItemHoverBg;
+            }
+
+            &.p-highlight {
+                color: general.$highlightTextColor;
+                background: general.$highlightBg;
+            }
+        }
+    }
+}

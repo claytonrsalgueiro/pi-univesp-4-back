@@ -1,0 +1,49 @@
+.card {
+    background: var(--surface-card);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1), 0px 24px 36px rgba(0, 0, 0, 0.04);
+    border-radius: 14px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.p-toast {
+    &.p-toast-top-right,
+    &.p-toast-top-left,
+    &.p-toast-top-center {
+        top: 7rem;
+    }
+}
+
+.table-border {
+    border: 1px solid #dee2e6;
+}
+
+.table-fixed {
+    table-layout: fixed;
+}
+
+.fieldset-p-0 {
+    min-width: 0 !important;
+    
+    & .p-fieldset-content {
+        padding: 0 !important;
+    }
+}
+
+.no-image {
+    padding: 1rem 2rem;
+    filter: invert(72%) sepia(100%) saturate(0%) hue-rotate(356deg) brightness(95%) contrast(135%);
+
+    &__text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        font-weight: 600;
+    }
+}

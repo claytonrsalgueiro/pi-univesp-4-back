@@ -1,0 +1,29 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/misc' as misc;
+@use '../../../theme-light/red/variables/form' as form;
+
+.p-scrolltop {
+    width: misc.$scrollTopWidth;
+    height: misc.$scrollTopHeight;
+    border-radius: misc.$scrollTopBorderRadius;
+    box-shadow: form.$inputOverlayShadow;
+    transition: general.$actionIconTransition;
+
+    &.p-link {
+        background: misc.$scrollTopBg;
+
+        &:hover {
+            background: misc.$scrollTopHoverBg;
+        }
+    }
+
+    .p-scrolltop-icon {
+        font-size: misc.$scrollTopFontSize;
+        color: misc.$scrollTopTextColor;
+
+        &.p-icon {
+            width: misc.$scrollTopFontSize;
+            height: misc.$scrollTopFontSize;
+        }
+    }
+}

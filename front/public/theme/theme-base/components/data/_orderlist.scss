@@ -1,0 +1,91 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../../theme-light/red/variables/form' as form;
+@use 'sass:list';
+
+.p-orderlist {
+	.p-orderlist-controls {
+		padding: panel.$panelContentPadding;
+
+		.p-button {
+			margin-bottom: general.$inlineSpacing;
+		}
+	}
+
+	.p-orderlist-header {
+		background: panel.$panelHeaderBg;
+		color: panel.$panelHeaderTextColor;
+		border: panel.$panelHeaderBorder;
+		padding: panel.$panelHeaderPadding;
+		font-weight: panel.$panelHeaderFontWeight;
+		border-bottom: 0 none;
+		border-top-right-radius: general.$borderRadius;
+		border-top-left-radius: general.$borderRadius;
+	}
+
+	.p-orderlist-filter-container {
+		padding: panel.$panelHeaderPadding;
+		background: panel.$panelContentBg;
+		border: panel.$panelHeaderBorder;
+		border-bottom: 0 none;
+
+		.p-orderlist-filter-input {
+			padding-right: list.nth(form.$inputPadding, 2) + general.$primeIconFontSize;
+		}
+
+		.p-orderlist-filter-icon {
+			right: list.nth(form.$inputPadding, 2);
+			color: form.$inputIconColor;
+		}
+	}
+
+	.p-orderlist-list {
+		border: panel.$panelContentBorder;
+		background: panel.$panelContentBg;
+		color: panel.$panelContentTextColor;
+		padding: form.$inputListPadding;
+		border-bottom-right-radius: general.$borderRadius;
+		border-bottom-left-radius: general.$borderRadius;
+		outline: 0 none;
+
+		.p-orderlist-item {
+			padding: form.$inputListItemPadding;
+			margin: form.$inputListItemMargin;
+			border: form.$inputListItemBorder;
+			color: form.$inputListItemTextColor;
+			background: form.$inputListItemBg;
+			transition: transform general.$transitionDuration, general.$listItemTransition;
+
+			&:not(.p-highlight):hover {
+				background: form.$inputListItemHoverBg;
+				color: form.$inputListItemTextHoverColor;
+			}
+
+			&.p-focus {
+				color: form.$inputListItemTextFocusColor;
+				background: form.$inputListItemFocusBg;
+			}
+
+			&.p-highlight {
+				color: general.$highlightTextColor;
+				background: general.$highlightBg;
+
+				&.p-focus {
+					background: general.$highlightFocusBg;
+				}
+			}
+		}
+	}
+
+	&.p-orderlist-striped {
+		.p-orderlist-list {
+			.p-orderlist-item:nth-child(even) {
+				background: panel.$panelContentEvenRowBg;
+
+				&:hover {
+					background: form.$inputListItemHoverBg;
+				}
+			}
+		}
+	}
+}

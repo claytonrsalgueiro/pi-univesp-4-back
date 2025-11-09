@@ -1,0 +1,46 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../../theme-light/red/variables/form' as form;
+@use '../../../theme-light/red/variables/data' as data;
+
+.p-fileupload {
+    .p-fileupload-buttonbar {
+        background: panel.$panelHeaderBg;
+        padding: panel.$panelHeaderPadding;
+        border: panel.$panelHeaderBorder;
+        color: panel.$panelHeaderTextColor;
+        border-bottom: 0 none;
+        border-top-right-radius: general.$borderRadius;
+        border-top-left-radius: general.$borderRadius;
+        gap: general.$inlineSpacing;
+        
+        .p-button {
+            margin-right: general.$inlineSpacing;
+        }
+    }
+
+    .p-fileupload-content {
+        background: panel.$panelContentBg;
+        padding: form.$fileUploadContentPadding;
+        border: panel.$panelContentBorder;
+        color: panel.$panelContentTextColor;
+        border-bottom-right-radius: general.$borderRadius;
+        border-bottom-left-radius: general.$borderRadius;
+    }
+
+    .p-progressbar {
+        height: form.$fileUploadProgressBarHeight;
+    }
+
+    .p-fileupload-row {
+        > div {
+            padding: data.$tableBodyCellPadding;
+        }
+    }
+
+    &.p-fileupload-advanced {
+        .p-message {
+            margin-top: 0;
+        }
+    }
+}

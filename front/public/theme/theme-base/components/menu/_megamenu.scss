@@ -1,0 +1,146 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/menu' as menu;
+@use '../../../theme-light/red/variables/overlay' as overlay;
+@use '../../mixins' as mixins;
+
+.p-megamenu {
+	padding: menu.$horizontalMenuPadding;
+	background: menu.$horizontalMenuBg;
+	color: menu.$horizontalMenuTextColor;
+	border: menu.$horizontalMenuBorder;
+	border-radius: general.$borderRadius;
+
+	.p-megamenu-root-list {
+		outline: 0 none;
+	}
+
+	.p-menuitem {
+		@include mixins.menuitem-link();
+	}
+
+	.p-megamenu-panel {
+		background: menu.$overlayMenuBg;
+		color: menu.$menuTextColor;
+		border: menu.$overlayMenuBorder;
+		box-shadow: menu.$overlayMenuShadow;
+	}
+
+	.p-submenu-header {
+		margin: menu.$submenuHeaderMargin;
+		padding: menu.$submenuHeaderPadding;
+		color: menu.$submenuHeaderTextColor;
+		background: menu.$submenuHeaderBg;
+		font-weight: menu.$submenuHeaderFontWeight;
+		border-top-right-radius: general.$borderRadius;
+		border-top-left-radius: general.$borderRadius;
+	}
+
+	.p-submenu-list {
+		padding: menu.$verticalMenuPadding;
+		width: menu.$menuWidth;
+
+		.p-menuitem-separator {
+			border-top: general.$divider;
+			margin: menu.$menuSeparatorMargin;
+		}
+	}
+
+	&.p-megamenu-vertical {
+		width: menu.$menuWidth;
+		padding: menu.$verticalMenuPadding;
+	}
+
+	.p-megamenu-button {
+		width: general.$actionIconWidth;
+		height: general.$actionIconHeight;
+		color: menu.$horizontalMenuRootMenuitemIconColor;
+		border-radius: general.$actionIconBorderRadius;
+		transition: general.$actionIconTransition;
+
+		&:hover {
+			color: menu.$horizontalMenuRootMenuitemIconHoverColor;
+			background: menu.$horizontalMenuRootMenuitemHoverBg;
+		}
+
+		&:focus {
+			@include mixins.focused();
+		}
+	}
+
+	&.p-megamenu-horizontal {
+		.p-megamenu-root-list {
+			> .p-menuitem {
+				@include mixins.horizontal-rootmenuitem-link();
+			}
+		}
+	}
+
+	&.p-megamenu-mobile-active {
+		.p-megamenu-root-list {
+			padding: menu.$verticalMenuPadding;
+			background: menu.$overlayMenuBg;
+			border: menu.$overlayMenuBorder;
+			box-shadow: menu.$overlayMenuShadow;
+
+			.p-menu-separator {
+				border-top: general.$divider;
+				margin: menu.$menuSeparatorMargin;
+			}
+
+			.p-submenu-icon {
+				font-size: menu.$menuitemSubmenuIconFontSize;
+
+				&.p-icon {
+					width: menu.$menuitemSubmenuIconFontSize;
+					height: menu.$menuitemSubmenuIconFontSize;
+				}
+			}
+
+			> .p-menuitem {
+				width: 100%;
+				position: static;
+
+				> .p-menuitem-link {
+					@include mixins.menuitem-link();
+
+					> .p-submenu-icon {
+						margin-left: auto;
+					}
+				}
+
+				&.p-menuitem-active {
+					> .p-menuitem-link {
+						> .p-submenu-icon {
+							transform: rotate(-180deg);
+						}
+					}
+				}
+			}
+
+			.p-submenu-list {
+				width: 100%;
+				position: static;
+				box-shadow: none;
+				border: 0 none;
+
+				.p-submenu-icon {
+					transition: transform general.$transitionDuration;
+					transform: rotate(90deg);
+				}
+
+				.p-menuitem-active {
+					> .p-menuitem-link {
+						> .p-submenu-icon {
+							transform: rotate(-90deg);
+						}
+					}
+				}
+			}
+
+			.p-menuitem {
+				width: 100%;
+				position: static;
+			}
+		}
+	}
+}

@@ -1,0 +1,8 @@
+@use 'general' as general;
+
+//chip
+$chipBg: rgba(0, 0, 0, 0.12) !default;
+$chipTextColor: general.$textColor !default;
+$chipBorderRadius: 16px !default;
+$chipFocusBg:rgba(0,0,0,.24) !default;
+$chipFocusTextColor: general.$textColor !default;

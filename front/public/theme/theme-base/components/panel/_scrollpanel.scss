@@ -1,0 +1,13 @@
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../mixins' as mixins;
+
+.p-scrollpanel {
+	.p-scrollpanel-bar {
+		background: panel.$scrollPanelTrackBg;
+		border: panel.$scrollPanelTrackBorder;
+
+		&:focus-visible {
+			@include mixins.focused();
+		}
+	}
+}

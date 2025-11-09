@@ -1,0 +1,83 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/overlay' as overlay;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../mixins' as mixins;
+
+.p-dialog {
+    border-radius: general.$borderRadius;
+    box-shadow: overlay.$overlayContainerShadow;
+    border: overlay.$overlayContentBorder;
+
+    .p-dialog-header {
+        border-bottom: overlay.$dialogHeaderBorder;
+        background: overlay.$dialogHeaderBg;
+        color: overlay.$dialogHeaderTextColor;
+        padding: overlay.$dialogHeaderPadding;
+        border-top-right-radius: general.$borderRadius;
+        border-top-left-radius: general.$borderRadius;
+
+        .p-dialog-title {
+            font-weight: overlay.$dialogHeaderFontWeight;
+            font-size: overlay.$dialogHeaderFontSize;
+        }
+
+        .p-dialog-header-icon {
+            @include mixins.action-icon();
+            & {
+                margin-right: general.$inlineSpacing;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }            
+        }
+    }
+
+    .p-dialog-content {
+        background: overlay.$overlayContentBg;
+        color: panel.$panelContentTextColor;
+        padding: overlay.$dialogContentPadding;
+
+        &:last-of-type {
+            border-bottom-right-radius: general.$borderRadius;
+            border-bottom-left-radius: general.$borderRadius;
+        }
+    }
+
+    .p-dialog-footer {
+        // border-top:  overlay.$dialogFooterBorder;
+        background: overlay.$overlayContentBg;
+        color: panel.$panelFooterTextColor;
+        padding: overlay.$dialogFooterPadding;
+        text-align: right;
+        border-bottom-right-radius: general.$borderRadius;
+        border-bottom-left-radius: general.$borderRadius;
+
+        button {
+            margin: 0 general.$inlineSpacing 0 0;
+            width: auto;
+        }
+    }
+
+    &.p-dialog-maximized {
+        .p-dialog-header, .p-dialog-content:last-of-type {
+            border-radius: 0;
+        }
+    }
+    
+
+    &.p-confirm-dialog {
+        .p-confirm-dialog-icon {
+            font-size: general.$primeIconFontSize * 2;
+            
+            &.p-icon {
+                width: general.$primeIconFontSize * 2;
+                height: general.$primeIconFontSize * 2;
+            }
+        }
+
+        .p-confirm-dialog-message {
+            margin-left: general.$inlineSpacing * 2;
+        }
+    }
+}

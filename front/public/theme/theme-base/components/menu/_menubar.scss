@@ -1,0 +1,222 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/menu' as menu;
+@use '../../../theme-light/red/variables/overlay' as overlay;
+@use '../../mixins' as mixins;
+@use "sass:list";
+
+.p-menubar {
+	padding: menu.$horizontalMenuPadding;
+	background: menu.$horizontalMenuBg;
+	color: menu.$horizontalMenuTextColor;
+	border: menu.$horizontalMenuBorder;
+	border-radius: general.$borderRadius;
+
+	.p-menubar-root-list {
+		outline: 0 none;
+
+		> .p-menuitem {
+			@include mixins.horizontal-rootmenuitem-link();
+		}
+	}
+
+	.p-menuitem {
+		@include mixins.menuitem-link();
+	}
+
+	.p-submenu-list {
+		padding: menu.$verticalMenuPadding;
+		background: menu.$overlayMenuBg;
+		border: menu.$overlayMenuBorder;
+		box-shadow: menu.$overlayMenuShadow;
+		width: menu.$menuWidth;
+
+		.p-menuitem-separator {
+			border-top: general.$divider;
+			margin: menu.$menuSeparatorMargin;
+		}
+
+		.p-submenu-icon {
+			font-size: menu.$menuitemSubmenuIconFontSize;
+		}
+	}
+
+	&.p-menubar-mobile {
+		.p-menubar-button {
+			width: general.$actionIconWidth;
+			height: general.$actionIconHeight;
+			color: menu.$horizontalMenuRootMenuitemIconColor;
+			border-radius: general.$actionIconBorderRadius;
+			transition: general.$actionIconTransition;
+
+			&:hover {
+				color: menu.$horizontalMenuRootMenuitemIconHoverColor;
+				background: menu.$horizontalMenuRootMenuitemHoverBg;
+			}
+
+			&:focus {
+				@include mixins.focused();
+			}
+		}
+
+		.p-menubar-root-list {
+			padding: menu.$verticalMenuPadding;
+			background: menu.$overlayMenuBg;
+			border: menu.$overlayMenuBorder;
+			box-shadow: menu.$overlayMenuShadow;
+
+			.p-menuitem-separator {
+				border-top: general.$divider;
+				margin: menu.$menuSeparatorMargin;
+			}
+
+			.p-submenu-icon {
+				font-size: menu.$menuitemSubmenuIconFontSize;
+			}
+
+			.p-menuitem {
+				.p-menuitem-content {
+					.p-menuitem-link {
+						.p-submenu-icon {
+							margin-left: auto;
+							transition: transform general.$transitionDuration;
+						}
+					}
+				}
+
+				&.p-menuitem-active {
+					> .p-menuitem-content {
+						> .p-menuitem-link {
+							> .p-submenu-icon {
+								transform: rotate(-180deg);
+							}
+						}
+					}
+				}
+			}
+
+			.p-submenu-list {
+				.p-submenu-icon {
+					transition: transform general.$transitionDuration;
+					transform: rotate(90deg);
+				}
+
+				.p-menuitem-active {
+					> .p-menuitem-content {
+						> .p-menuitem-link {
+							> .p-submenu-icon {
+								transform: rotate(-90deg);
+							}
+						}
+					}
+				}
+			}
+
+			@include mixins.nested-submenu-indents(list.nth(menu.$menuitemPadding, 1), 2, 10);
+		}
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.p-menubar {
+		position: relative;
+
+		.p-menubar-button {
+			display: flex;
+			width: general.$actionIconWidth;
+			height: general.$actionIconHeight;
+			color: menu.$horizontalMenuRootMenuitemIconColor;
+			border-radius: general.$actionIconBorderRadius;
+			transition: general.$actionIconTransition;
+
+			&:hover {
+				color: menu.$horizontalMenuRootMenuitemIconHoverColor;
+				background: menu.$horizontalMenuRootMenuitemHoverBg;
+			}
+
+			&:focus {
+				@include mixins.focused();
+			}
+		}
+
+		.p-menubar-root-list {
+			position: absolute;
+			display: none;
+			padding: menu.$verticalMenuPadding;
+			background: menu.$overlayMenuBg;
+			border: menu.$overlayMenuBorder;
+			box-shadow: menu.$overlayMenuShadow;
+			width: 100%;
+
+			.p-menu-separator {
+				border-top: general.$divider;
+				margin: menu.$menuSeparatorMargin;
+			}
+
+			.p-submenu-icon {
+				font-size: menu.$menuitemSubmenuIconFontSize;
+
+				&.p-icon {
+					width: menu.$menuitemSubmenuIconFontSize;
+					height: menu.$menuitemSubmenuIconFontSize;
+				}
+			}
+
+			> .p-menuitem {
+				width: 100%;
+				position: static;
+
+				> .p-menuitem-link {
+					@include mixins.menuitem-link();
+
+					> .p-submenu-icon {
+						margin-left: auto;
+						transition: transform general.$transitionDuration;
+					}
+				}
+
+				&.p-menuitem-active {
+					> .p-menuitem-link {
+						> .p-submenu-icon {
+							transform: rotate(-180deg);
+						}
+					}
+				}
+			}
+
+			.p-submenu-list {
+				width: 100%;
+				position: static;
+				box-shadow: none;
+				border: 0 none;
+
+				.p-submenu-icon {
+					transition: transform general.$transitionDuration;
+					transform: rotate(90deg);
+				}
+
+				.p-menuitem-active {
+					> .p-menuitem-link {
+						> .p-submenu-icon {
+							transform: rotate(-90deg);
+						}
+					}
+				}
+			}
+
+			.p-menuitem {
+				width: 100%;
+				position: static;
+			}
+
+			@include mixins.nested-submenu-indents(list.nth(menu.$menuitemPadding, 1), 2, 10);
+		}
+
+		&.p-menubar-mobile-active .p-menubar-root-list {
+			display: flex;
+			flex-direction: column;
+			top: 100%;
+			left: 0;
+			z-index: 1;
+		}
+	}
+}

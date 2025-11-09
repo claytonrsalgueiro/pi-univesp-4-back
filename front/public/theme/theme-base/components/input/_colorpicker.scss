@@ -1,0 +1,20 @@
+@use '../../../theme-light/red/variables/form' as form;
+
+.p-colorpicker-preview  {
+    width: form.$colorPickerPreviewWidth;
+    height: form.$colorPickerPreviewHeight;
+}
+
+.p-colorpicker-panel {
+    background: form.$colorPickerBg;
+    border: form.$colorPickerBorder;
+
+    .p-colorpicker-color-handle,
+    .p-colorpicker-hue-handle {
+        border-color: form.$colorPickerHandleColor;
+    }
+}
+
+.p-colorpicker-overlay-panel {
+    box-shadow: form.$inputOverlayShadow;
+}

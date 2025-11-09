@@ -1,0 +1,20 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/misc' as misc;
+
+.p-progressbar {
+    border: misc.$progressBarBorder;
+    height: misc.$progressBarHeight;
+    background: misc.$progressBarBg;
+    border-radius: general.$borderRadius;
+
+    .p-progressbar-value {
+        border: 0 none;
+        margin: 0;
+        background: misc.$progressBarValueBg;
+    }
+
+    .p-progressbar-label {
+        color: misc.$progressBarValueTextColor;
+        line-height: misc.$progressBarHeight;
+    }
+}

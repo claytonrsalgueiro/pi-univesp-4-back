@@ -1,0 +1,65 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/overlay' as overlay;
+@use '../../../theme-light/red/variables/menu' as menu;
+@use '../../mixins' as mixins;
+
+.p-slidemenu {
+    padding: menu.$verticalMenuPadding;
+    background: menu.$menuBg;
+    color: menu.$menuTextColor;
+    border: menu.$menuBorder;
+    border-radius: general.$borderRadius;
+    width: menu.$menuWidth;
+
+    .p-menuitem-link {
+        @include mixins.menuitem-link();
+    }
+
+    &.p-slidemenu-overlay {
+        background: menu.$overlayMenuBg;
+        border: menu.$overlayMenuBorder;
+        box-shadow: menu.$overlayMenuShadow;
+    }
+
+    .p-slidemenu-list {
+        padding: menu.$verticalMenuPadding;
+        background: menu.$overlayMenuBg;
+        border: menu.$overlayMenuBorder;
+        box-shadow: menu.$overlayMenuShadow;
+    }
+
+    .p-slidemenu {
+        &.p-slidemenu-active {
+            > .p-slidemenu-link {
+                background: menu.$menuitemActiveBg;
+
+                .p-slidemenu-text {
+                    color: menu.$menuitemTextActiveColor;
+                }
+
+                .p-slidemenu-icon, .p-slidemenu-icon {
+                    color: menu.$menuitemIconActiveColor;
+                }
+            }
+        }
+    }
+
+    .p-slidemenu-separator {
+        border-top: general.$divider;
+        margin: menu.$menuSeparatorMargin;
+    }
+
+    .p-slidemenu-icon {
+        font-size: menu.$menuitemSubmenuIconFontSize;
+
+        &.p-icon {
+            width: menu.$menuitemSubmenuIconFontSize;
+            height: menu.$menuitemSubmenuIconFontSize;
+        }
+    }
+
+    .p-slidemenu-backward {
+        padding: menu.$menuitemPadding;
+	    color: menu.$menuitemTextColor;
+    }
+}

@@ -1,0 +1,51 @@
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../mixins' as mixins;
+
+.p-panel {
+    .p-panel-header {
+        border: panel.$panelHeaderBorder;
+        padding: panel.$panelHeaderPadding;
+        background: panel.$panelHeaderBg;
+        color: panel.$panelHeaderTextColor;
+        border-top-right-radius: general.$borderRadius;
+        border-top-left-radius: general.$borderRadius;
+
+        .p-panel-title {
+            font-weight: panel.$panelHeaderFontWeight;
+        }
+
+        .p-panel-header-icon {
+            @include mixins.action-icon();
+        }
+    }
+
+    &.p-panel-toggleable {
+        .p-panel-header {
+            padding: panel.$panelToggleableHeaderPadding;
+        }
+    }
+
+    &:has(> .p-panel-footer) .p-panel-content {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .p-panel-content {
+        padding: panel.$panelContentPadding;
+        border: panel.$panelContentBorder;
+        background: panel.$panelContentBg;
+        color: panel.$panelContentTextColor;
+        border-bottom-right-radius: general.$borderRadius;
+        border-bottom-left-radius: general.$borderRadius;
+        border-top: 0 none;
+    }
+
+    .p-panel-footer {
+        padding: panel.$panelFooterPadding;
+        border: panel.$panelFooterBorder;
+        background: panel.$panelFooterBg;
+        color: panel.$panelFooterTextColor;
+        border-top: 0 none;
+    }
+}

@@ -1,0 +1,43 @@
+@use 'sass:math';
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/misc' as misc;
+@use '../../../theme-light/red/variables/button' as button;
+
+.p-tag {
+    background: misc.$badgeBg;
+    color: misc.$badgeTextColor;
+    font-size: misc.$badgeFontSize;
+    font-weight: misc.$badgeFontWeight;
+    padding: misc.$tagPadding;
+    border-radius: general.$borderRadius;
+
+    &.p-tag-success {
+        background-color: button.$successButtonBg;
+        color: button.$successButtonTextColor;
+    }
+
+    &.p-tag-info {
+        background-color: button.$infoButtonBg;
+        color: button.$infoButtonTextColor;
+    }
+
+    &.p-tag-warning {
+        background-color: button.$warningButtonBg;
+        color: button.$warningButtonTextColor;
+    }
+
+    &.p-tag-danger {
+        background-color: button.$dangerButtonBg;
+        color: button.$dangerButtonTextColor;
+    }
+
+    .p-tag-icon {
+        margin-right: math.div(general.$inlineSpacing, 2);
+        font-size: misc.$badgeFontSize;
+
+        &.p-icon {
+            width: misc.$badgeFontSize;
+            height: misc.$badgeFontSize;
+        }
+    }
+}

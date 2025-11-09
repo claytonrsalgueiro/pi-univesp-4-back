@@ -1,0 +1,142 @@
+@use "sass:math";
+@use "sass:meta";
+@use '../../../theme-light/red/variables/general' as general;
+@use '../../../theme-light/red/variables/panel' as panel;
+@use '../../../theme-light/red/variables/menu' as menu;
+@use '../../../theme-light/red/variables/data' as data;
+@use '../../mixins' as mixins;
+
+//theme
+.p-stepper {
+  .p-stepper-nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .p-stepper-header {
+    padding: general.$inlineSpacing;
+
+    .p-stepper-action {
+      transition: general.$listItemTransition;
+      border-radius: general.$borderRadius;
+      background: menu.$stepsItemBg;
+      outline-color: transparent;
+
+      .p-stepper-number {
+        color: menu.$stepsItemNumberColor;
+        border: menu.$stepsItemBorder;
+        border-width: 2px;
+        background: menu.$stepsItemBg;
+        min-width: menu.$stepsItemNumberWidth;
+        height: menu.$stepsItemNumberHeight;
+        line-height: menu.$stepsItemNumberHeight;
+        font-size: menu.$stepsItemNumberFontSize;
+        border-radius: menu.$stepsItemNumberBorderRadius;
+        transition: general.$actionIconTransition;
+      }
+
+      .p-stepper-title {
+        margin-left: general.$inlineSpacing;
+        color: menu.$stepsItemTextColor;
+        font-weight: menu.$stepsItemActiveFontWeight;
+        transition: general.$actionIconTransition;
+      }
+
+      &:not(.p-disabled):focus-visible {
+        @include mixins.focused();
+      }
+    }
+
+    &.p-highlight {
+      .p-stepper-number {
+        background: general.$highlightBg;
+        color: general.$highlightTextColor;
+      }
+
+      .p-stepper-title {
+        color: general.$textColor;
+      }
+    }
+
+    &:not(.p-disabled):focus-visible {
+      @include mixins.focused();
+    }
+
+    &:has(~ .p-highlight) {
+      @if meta.variable-exists(primaryColor) {
+        .p-stepper-separator {
+          background-color: general.$primaryColor;
+        }
+      }
+    }
+  }
+
+  .p-stepper-panels {
+    background: panel.$tabviewContentBg;
+    padding: panel.$tabviewContentPadding;
+    color: panel.$tabviewContentTextColor;
+  }
+
+  .p-stepper-separator {
+    background-color: data.$timelineEventColor;
+    width: 100%;
+    height: 2px;
+    margin-inline-start: calc(general.$inlineSpacing * 2);
+    transition: general.$listItemTransition;
+  }
+
+  &.p-stepper-vertical {
+    display: flex;
+    flex-direction: column;
+
+    .p-stepper-toggleable-content {
+      display: flex;
+      flex: 1 1 auto;
+      background: panel.$tabviewContentBg;
+      color: panel.$tabviewContentTextColor;
+    }
+
+    .p-stepper-panel {
+      display: flex;
+      flex-direction: column;
+      flex: initial;
+
+      &.p-stepper-panel-active {
+        flex: 1 1 auto;
+      }
+
+      .p-stepper-header {
+        flex: initial;
+      }
+
+      .p-stepper-content {
+        width: 100%;
+        padding-left: calc(general.$inlineSpacing * 2);
+      }
+
+      .p-stepper-separator {
+        flex: 0 0 auto;
+        width: 2px;
+        height: auto;
+        margin-inline-start: calc(general.$inlineSpacing * 7 / 2 + 2px);
+      }
+
+      &:has(~ .p-stepper-panel-active) {
+        @if meta.variable-exists(primaryColor) {
+          .p-stepper-separator {
+            background-color: general.$primaryColor;
+          }
+        }
+      }
+
+      &:last-of-type {
+        .p-stepper-content {
+          padding-left: calc(general.$inlineSpacing * 6);
+        }
+      }
+    }
+  }
+}
