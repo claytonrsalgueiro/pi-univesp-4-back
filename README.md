@@ -192,6 +192,8 @@ http://localhost:3000/login
 
 ### ⚙️ Arquivos .DAT usados como base para alimentação do banco de dados
 https://github.com/claytonrsalgueiro/pi-univesp-4-back/tree/main/backend
+
+# Após subir o back e o front end e estar logado no sistema web, basta baixar esses 3 arquivos .dat e importá-los na tela http://localhost:3000/meteo utilizando o botão "Importar"
 ---
 
 
