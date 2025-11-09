@@ -77,12 +77,15 @@ server:
 auth:
   username: admin
   password: 123456
+```
 
+---
 
-🐳 Docker Compose (MySQL)
+## 🐳 Docker Compose (MySQL)
 
-Crie o arquivo docker-compose.yml na raiz do projeto:
+Crie o arquivo **`docker-compose.yml`** na raiz do projeto:
 
+```yaml
 version: '3.8'
 
 services:
@@ -103,74 +106,94 @@ services:
 
 volumes:
   mysql_data:
+```
 
-▶️ Subir banco de dados:
+### ▶️ Subir banco de dados:
+```bash
 docker-compose up -d
+```
 
-🧠 Execução do Backend
-Pré-requisitos
+---
 
-Java 17 instalado
+## 🧠 Execução do Backend
 
-Maven 3.9+
+### Pré-requisitos
+- **Java 17** instalado
+- **Maven 3.9+**
+- **MySQL 8** (local ou via Docker)
 
-MySQL 8 (local ou via Docker)
+### Comandos
 
-Comandos
+```bash
 # na pasta do backend
 mvn clean install
 mvn spring-boot:run
-
+```
 
 A API iniciará em:
-
+```
 http://localhost:8090
-
+```
 
 Endpoints principais:
+| Método | Endpoint | Descrição |
+|---------|-----------|-----------|
+| `POST` | `/api/weather/upload` | Upload e ingestão de arquivo `.dat` |
+| `GET` | `/api/weather/summary` | Retorna médias e totais agregados |
+| `GET` | `/api/weather/charts` | Dados consolidados para gráficos |
+| `GET` | `/api/weather/export` | Exporta dados filtrados em Excel |
 
-Método	Endpoint	Descrição
-POST	/api/weather/upload	Upload e ingestão de arquivo .dat
-GET	/api/weather/summary	Retorna médias e totais agregados
-GET	/api/weather/charts	Dados consolidados para gráficos
-GET	/api/weather/export	Exporta dados filtrados em Excel
-🌐 Frontend (Next.js + PrimeReact)
-Pré-requisitos
+---
 
-Node.js >= 18
+## 🌐 Frontend (Next.js + PrimeReact)
 
-npm >= 9
+### Pré-requisitos
+- **Node.js >= 18**
+- **npm >= 9**
+- (Opcional) **Docker** para subir o banco e o backend
 
-(Opcional) Docker para subir o banco e o backend
+### ⚙️ Arquivo `.env.local`
+Crie na raiz do projeto **frontend**:
 
-⚙️ Arquivo .env.local
-
-Crie na raiz do projeto frontend:
-
+```env
 SESSION_KEY="HM15snfT1Jy7hsxfjL5RXW43WSH/pZGthpKxO85b1hA="
 API_URL="http://localhost:8090/api"
 BASIC_USER="admin"
 BASIC_PASS="123456"
+```
 
-🧩 Comandos
+---
+
+### 🧩 Comandos
+
+```bash
 # instalar dependências
 npm install
 
 # rodar em modo desenvolvimento
 npm run dev
-
+```
 
 A aplicação estará disponível em:
-
+```
 http://localhost:3000/login
+```
 
-🔑 Acesso ao Sistema
-Campo	Valor
-URL de Login	http://localhost:3000/login
+---
 
-Usuário	admin
-Senha	123456
-🧱 Estrutura de Pastas
+## 🔑 Acesso ao Sistema
+
+| Campo | Valor |
+|-------|-------|
+| **URL de Login** | [http://localhost:3000/login](http://localhost:3000/login) |
+| **Usuário** | `admin` |
+| **Senha** | `123456` |
+
+---
+
+## 🧱 Estrutura de Pastas
+
+```
 /backend
  ├─ src/main/java/br/com/weather
  │   ├─ controller/
@@ -188,66 +211,75 @@ Senha	123456
  │   └─ logo-weather.png
  ├─ package.json
  └─ .env.local
-
-📊 Funcionalidades
-
-✅ Upload de arquivos meteorológicos (.dat / TOA5)
-✅ Processamento em massa via Spring Boot
-✅ Armazenamento em MySQL
-✅ Tabelas com médias diárias/horárias
-✅ Exportação para Excel
-✅ Gráficos dinâmicos (temperatura, vento, umidade, precipitação)
-✅ Hyetograma (chuva acumulada)
-✅ Autenticação básica (admin / 123456)
-✅ Layout responsivo com PrimeReact e TailwindCSS
-
-⚡ Portas Padrão
-Serviço	Porta	Descrição
-Frontend	3000	Interface web (Next.js)
-Backend (API)	8090	Spring Boot
-MySQL	3306	Banco de dados
-🧑‍💻 Exemplos de Uso da API
-Upload de arquivo via cURL
-curl -X POST "http://localhost:8090/api/weather/upload" \
-  -u admin:123456 \
-  -F "file=@/caminho/do/arquivo.dat"
-
-Buscar resumo consolidado
-curl -X GET "http://localhost:8090/api/weather/summary?start=2025-01-01&end=2025-01-31" \
-  -u admin:123456
-
-🛠️ Observações
-
-Este sistema foi projetado para uso educacional e acadêmico, demonstrando:
-
-Processamento em massa de dados IoT
-
-Visualização interativa
-
-Exportação e análise de dados
-
-Pode ser facilmente adaptado para:
-
-Leitura em tempo real (MQTT, WebSocket)
-
-Dashboards avançados (Grafana, Kibana, etc.)
-
-📸 Interface de Exemplo
-
-Tela de Gráficos (Hyetograma, Umidade, Vento, Temperatura)
-
-
-📦 Licença
-
-MIT — uso livre para fins acadêmicos e comerciais com atribuição.
-
-✨ Autor
-
-Desenvolvido por: [Seu Nome Aqui]
-📧 Contato: seu.email@exemplo.com
-
-📅 Projeto acadêmico — 2025
-
+```
 
 ---
 
+## 📊 Funcionalidades
+
+✅ **Upload de arquivos meteorológicos (.dat / TOA5)**  
+✅ **Processamento em massa via Spring Boot**  
+✅ **Armazenamento em MySQL**  
+✅ **Tabelas com médias diárias/horárias**  
+✅ **Exportação para Excel**  
+✅ **Gráficos dinâmicos (temperatura, vento, umidade, precipitação)**  
+✅ **Hyetograma (chuva acumulada)**  
+✅ **Autenticação básica (admin / 123456)**  
+✅ **Layout responsivo com PrimeReact e TailwindCSS**
+
+---
+
+## ⚡ Portas Padrão
+
+| Serviço | Porta | Descrição |
+|----------|-------|-----------|
+| **Frontend** | `3000` | Interface web (Next.js) |
+| **Backend (API)** | `8090` | Spring Boot |
+| **MySQL** | `3306` | Banco de dados |
+
+---
+
+## 🧑‍💻 Exemplos de Uso da API
+
+### Upload de arquivo via cURL
+
+```bash
+curl -X POST "http://localhost:8090/api/weather/upload"   -u admin:123456   -F "file=@/caminho/do/arquivo.dat"
+```
+
+### Buscar resumo consolidado
+
+```bash
+curl -X GET "http://localhost:8090/api/weather/summary?start=2025-01-01&end=2025-01-31"   -u admin:123456
+```
+
+---
+
+## 🛠️ Observações
+
+- Este sistema foi projetado para uso **educacional e acadêmico**, demonstrando:
+  - **Processamento em massa de dados IoT**
+  - **Visualização interativa**
+  - **Exportação e análise de dados**
+- Pode ser facilmente adaptado para:
+  - **Leitura em tempo real (MQTT, WebSocket)**
+  - **Dashboards avançados (Grafana, Kibana, etc.)**
+
+---
+
+## 📸 Interface de Exemplo
+
+**Tela de Gráficos (Hyetograma, Umidade, Vento, Temperatura)**  
+![Exemplo Gráficos](docs/screenshot-graficos.png)
+
+---
+
+## 📦 Licença
+MIT — uso livre para fins acadêmicos e comerciais com atribuição.
+
+---
+
+## ✨ Autor
+**Desenvolvido por:** [Seu Nome Aqui]  
+📧 Contato: seu.email@exemplo.com  
+📅 Projeto acadêmico — 2025
