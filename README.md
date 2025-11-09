@@ -280,6 +280,6 @@ MIT — uso livre para fins acadêmicos e comerciais com atribuição.
 ---
 
 ## ✨ Autor
-**Desenvolvido por:** [Seu Nome Aqui]  
-📧 Contato: seu.email@exemplo.com  
-📅 Projeto acadêmico — 2025
+**Desenvolvido por:** DRP03-PJI410-SALA-002GRUPO-013
+📧 Contato:   
+📅 Projeto acadêmico PI 4 - Univesp — 2025
