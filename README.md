@@ -288,6 +288,5 @@ MIT — uso livre para fins acadêmicos e comerciais com atribuição.
 ---
 
 ## ✨ Autor
-**Desenvolvido por:** DRP03-PJI410-SALA-002GRUPO-013
-📧 Contato:   
+**Desenvolvido pelo Grupo:** DRP03-PJI410-SALA-002GRUPO-013
 📅 Projeto acadêmico PI 4 - Univesp — 2025
