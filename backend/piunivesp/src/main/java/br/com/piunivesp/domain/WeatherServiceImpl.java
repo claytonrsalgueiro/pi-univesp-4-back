@@ -1,8 +1,15 @@
 package br.com.piunivesp.domain;
 
 import br.com.piunivesp.interfaces.dto.ChartSeriesDTO;
+import br.com.piunivesp.interfaces.dto.DashboardResponseDTO;
+import br.com.piunivesp.interfaces.dto.ExtremePointDTO;
+import br.com.piunivesp.interfaces.dto.ExtremesResponseDTO;
+import br.com.piunivesp.interfaces.dto.SolarRadiationChartDTO;
+import br.com.piunivesp.interfaces.dto.SolarRadiationPointDTO;
 import br.com.piunivesp.interfaces.dto.SummaryPointDTO;
 import br.com.piunivesp.interfaces.dto.SummaryResponseDTO;
+import br.com.piunivesp.interfaces.dto.TemperatureRangeChartDTO;
+import br.com.piunivesp.interfaces.dto.TemperatureRangePointDTO;
 import br.com.piunivesp.interfaces.dto.UploadResponseDTO;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
@@ -101,11 +108,90 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
+    public DashboardResponseDTO dashboard(LocalDate startDate, LocalDate endDate) {
+        var start = startDate.atStartOfDay();
+        var end = endDate.atTime(LocalTime.MAX);
+        var row = repo.aggregateDashboard(start, end);
+
+        return DashboardResponseDTO.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .temperatureAvg(getD(row.get("temperatureAvg")))
+                .temperatureMin(getD(row.get("temperatureMin")))
+                .temperatureMax(getD(row.get("temperatureMax")))
+                .precipitationSum(getD(row.get("precipitationSum")))
+                .humidityAvg(getD(row.get("humidityAvg")))
+                .windSpeedAvg(getD(row.get("windSpeedAvg")))
+                .windSpeedMax(getD(row.get("windSpeedMax")))
+                .build();
+    }
+
+    @Override
+    public ExtremesResponseDTO extremes(LocalDate startDate, LocalDate endDate) {
+        var start = startDate.atStartOfDay();
+        var end = endDate.atTime(LocalTime.MAX);
+
+        return ExtremesResponseDTO.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .hottestDay(toExtreme("Dia mais quente", repo.hottestDay(start, end), "°C"))
+                .coldestDay(toExtreme("Dia mais frio", repo.coldestDay(start, end), "°C"))
+                .rainPeakHour(toExtreme("Hora de maior chuva", repo.rainPeakHour(start, end), "mm"))
+                .windPeakMoment(toExtreme("Horário de maior vento", repo.windPeakMoment(start, end), "m/s"))
+                .humidityMin(toExtreme("Menor umidade", repo.humidityMin(start, end), "%"))
+                .humidityMax(toExtreme("Maior umidade", repo.humidityMax(start, end), "%"))
+                .build();
+    }
+
+    @Override
     public ChartSeriesDTO chart(LocalDate startDate, LocalDate endDate, Granularity granularity) {
         var s = summary(startDate, endDate, granularity);
         return ChartSeriesDTO.builder()
                 .granularity(s.getGranularity())
                 .data(s.getPoints())
+                .build();
+    }
+
+    @Override
+    public TemperatureRangeChartDTO temperatureRange(LocalDate startDate, LocalDate endDate) {
+        var start = startDate.atStartOfDay();
+        var end = endDate.atTime(LocalTime.MAX);
+
+        var rows = repo.aggregateTemperatureRangeDaily(start, end);
+        var points = rows.stream().map(row -> TemperatureRangePointDTO.builder()
+                        .period(LocalDateTime.parse(row.get("period").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .temperatureMin(getD(row.get("temperatureMin")))
+                        .temperatureAvg(getD(row.get("temperatureAvg")))
+                        .temperatureMax(getD(row.get("temperatureMax")))
+                        .build())
+                .collect(Collectors.toList());
+
+        return TemperatureRangeChartDTO.builder()
+                .granularity(Granularity.DAILY.name())
+                .data(points)
+                .build();
+    }
+
+    @Override
+    public SolarRadiationChartDTO solarRadiation(LocalDate startDate, LocalDate endDate, Granularity granularity) {
+        var gran = resolveGranularity(startDate, endDate, granularity);
+        var start = startDate.atStartOfDay();
+        var end = endDate.atTime(LocalTime.MAX);
+
+        List<Map<String, Object>> rows = (gran == Granularity.HOURLY)
+                ? repo.aggregateSolarHourly(start, end)
+                : repo.aggregateSolarDaily(start, end);
+
+        var points = rows.stream().map(row -> SolarRadiationPointDTO.builder()
+                        .period(LocalDateTime.parse(row.get("period").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                        .solarRadiationAvg(getD(row.get("solarRadiationAvg")))
+                        .solarEnergySum(getD(row.get("solarEnergySum")))
+                        .build())
+                .collect(Collectors.toList());
+
+        return SolarRadiationChartDTO.builder()
+                .granularity(gran.name())
+                .data(points)
                 .build();
     }
 
@@ -168,6 +254,22 @@ public class WeatherServiceImpl implements WeatherService {
 
     private static Double getD(Object o) {
         return o == null ? null : Double.valueOf(o.toString());
+    }
+
+    private static ExtremePointDTO toExtreme(String label, Map<String, Object> row, String unit) {
+        if (row == null || row.isEmpty()) {
+            return ExtremePointDTO.builder()
+                    .label(label)
+                    .unit(unit)
+                    .build();
+        }
+
+        return ExtremePointDTO.builder()
+                .label(label)
+                .period(row.get("period") == null ? null : row.get("period").toString())
+                .value(getD(row.get("value")))
+                .unit(unit)
+                .build();
     }
 
     private static double nz(Double d) {

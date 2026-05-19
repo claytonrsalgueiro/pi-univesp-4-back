@@ -3,7 +3,11 @@ package br.com.piunivesp.interfaces;
 import br.com.piunivesp.domain.Granularity;
 import br.com.piunivesp.domain.WeatherService;
 import br.com.piunivesp.interfaces.dto.ChartSeriesDTO;
+import br.com.piunivesp.interfaces.dto.DashboardResponseDTO;
+import br.com.piunivesp.interfaces.dto.ExtremesResponseDTO;
+import br.com.piunivesp.interfaces.dto.SolarRadiationChartDTO;
 import br.com.piunivesp.interfaces.dto.SummaryResponseDTO;
+import br.com.piunivesp.interfaces.dto.TemperatureRangeChartDTO;
 import br.com.piunivesp.interfaces.dto.UploadResponseDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +40,22 @@ public class WeatherController {
         return service.summary(start, end, granularity);
     }
 
+    @GetMapping("/dashboard")
+    public DashboardResponseDTO dashboard(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
+    ) {
+        return service.dashboard(start, end);
+    }
+
+    @GetMapping("/extremes")
+    public ExtremesResponseDTO extremes(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
+    ) {
+        return service.extremes(start, end);
+    }
+
     @GetMapping("/charts")
     public ChartSeriesDTO charts(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
@@ -43,6 +63,23 @@ public class WeatherController {
             @RequestParam(defaultValue = "AUTO") Granularity granularity
     ) {
         return service.chart(start, end, granularity);
+    }
+
+    @GetMapping("/charts/temperature-range")
+    public TemperatureRangeChartDTO temperatureRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
+    ) {
+        return service.temperatureRange(start, end);
+    }
+
+    @GetMapping("/charts/solar-radiation")
+    public SolarRadiationChartDTO solarRadiation(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @RequestParam(defaultValue = "AUTO") Granularity granularity
+    ) {
+        return service.solarRadiation(start, end, granularity);
     }
 
     @GetMapping("/export")
