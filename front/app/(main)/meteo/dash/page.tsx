@@ -6,17 +6,16 @@ import { Chart } from 'primereact/chart';
 import { Message } from 'primereact/message';
 import { format } from 'date-fns';
 
-type Point = {
-  period: string;
+type DashboardResponse = {
+  startDate: string;
+  endDate: string;
   temperatureAvg: number | null;
-  windSpeedAvg: number | null;
+  temperatureMin: number | null;
+  temperatureMax: number | null;
   precipitationSum: number | null;
   humidityAvg: number | null;
-};
-
-type ChartResponse = {
-  granularity: 'HOURLY' | 'DAILY' | 'AUTO';
-  data: Point[];
+  windSpeedAvg: number | null;
+  windSpeedMax: number | null;
 };
 
 type TemperatureRangePoint = {
@@ -42,39 +41,57 @@ type SolarRadiationResponse = {
   data: SolarRadiationPoint[];
 };
 
-const PRECIP_TARGET_MM = 50;
+const DASHBOARD_CARDS: Array<{
+  key: keyof Pick<
+    DashboardResponse,
+    'temperatureAvg' | 'temperatureMin' | 'temperatureMax' | 'precipitationSum' | 'humidityAvg' | 'windSpeedAvg' | 'windSpeedMax'
+  >;
+  label: string;
+  icon: string;
+  suffix: string;
+}> = [
+  { key: 'temperatureAvg', label: 'Temperatura média', icon: 'pi pi-sun', suffix: ' °C' },
+  { key: 'temperatureMax', label: 'Temperatura máxima', icon: 'pi pi-angle-double-up', suffix: ' °C' },
+  { key: 'temperatureMin', label: 'Temperatura mínima', icon: 'pi pi-angle-double-down', suffix: ' °C' },
+  { key: 'precipitationSum', label: 'Chuva acumulada', icon: 'pi pi-cloud', suffix: ' mm' },
+  { key: 'humidityAvg', label: 'Umidade média', icon: 'pi pi-eye', suffix: ' %' },
+  { key: 'windSpeedAvg', label: 'Vento médio', icon: 'pi pi-send', suffix: ' m/s' },
+  { key: 'windSpeedMax', label: 'Maior velocidade', icon: 'pi pi-bolt', suffix: ' m/s' }
+];
 
-type NumericKey = 'temperatureAvg' | 'windSpeedAvg' | 'precipitationSum' | 'humidityAvg';
-
-export default function GraficosPage() {
+export default function DashPage() {
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(null);
-  const [resp, setResp] = useState<ChartResponse | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [tempRangeResp, setTempRangeResp] = useState<TemperatureRangeResponse | null>(null);
   const [solarResp, setSolarResp] = useState<SolarRadiationResponse | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
       if (!start || !end) return;
 
-      const qs = new URLSearchParams({
+      const baseQs = new URLSearchParams({
         start: format(start, 'yyyy-MM-dd'),
-        end: format(end, 'yyyy-MM-dd'),
-        granularity: 'AUTO'
+        end: format(end, 'yyyy-MM-dd')
       });
 
+      const chartQs = new URLSearchParams(baseQs);
+      chartQs.set('granularity', 'AUTO');
+
+      setLoading(true);
       setError(null);
 
       try {
-        const [mainRes, tempRangeRes, solarRes] = await Promise.all([
-          fetch(`/meteo/api/weather/charts?${qs.toString()}`),
-          fetch(`/meteo/api/weather/charts/temperature-range?start=${format(start, 'yyyy-MM-dd')}&end=${format(end, 'yyyy-MM-dd')}`),
-          fetch(`/meteo/api/weather/charts/solar-radiation?${qs.toString()}`)
+        const [dashboardRes, tempRangeRes, solarRes] = await Promise.all([
+          fetch(`/meteo/api/weather/dashboard?${baseQs.toString()}`),
+          fetch(`/meteo/api/weather/charts/temperature-range?${baseQs.toString()}`),
+          fetch(`/meteo/api/weather/charts/solar-radiation?${chartQs.toString()}`)
         ]);
 
-        if (!mainRes.ok) {
-          throw new Error('Não foi possível carregar os gráficos principais.');
+        if (!dashboardRes.ok) {
+          throw new Error('Não foi possível carregar o dashboard.');
         }
 
         if (!tempRangeRes.ok) {
@@ -85,109 +102,35 @@ export default function GraficosPage() {
           throw new Error('Não foi possível carregar o gráfico de radiação solar.');
         }
 
-        const [mainJson, tempRangeJson, solarJson]: [ChartResponse, TemperatureRangeResponse, SolarRadiationResponse] = await Promise.all([
-          mainRes.json(),
+        const [dashboardJson, tempRangeJson, solarJson]: [DashboardResponse, TemperatureRangeResponse, SolarRadiationResponse] = await Promise.all([
+          dashboardRes.json(),
           tempRangeRes.json(),
           solarRes.json()
         ]);
 
-        setResp(mainJson);
+        setDashboard(dashboardJson);
         setTempRangeResp(tempRangeJson);
         setSolarResp(solarJson);
       } catch (err: any) {
-        setResp(null);
+        setDashboard(null);
         setTempRangeResp(null);
         setSolarResp(null);
-        setError(err?.message || 'Não foi possível carregar os gráficos.');
+        setError(err?.message || 'Não foi possível carregar os dados do painel.');
+      } finally {
+        setLoading(false);
       }
     };
 
     load();
   }, [start, end]);
 
-  const labels = resp?.data?.map((point) => point.period?.replace('T', ' ')) ?? [];
+  const formatMetric = (value: number | null | undefined, suffix: string) => {
+    if (value == null || Number.isNaN(value)) return '--';
+    return `${value.toFixed(2)}${suffix}`;
+  };
+
   const tempRangeLabels = tempRangeResp?.data?.map((point) => point.period?.replace('T', ' ')) ?? [];
   const solarLabels = solarResp?.data?.map((point) => point.period?.replace('T', ' ')) ?? [];
-
-  const toNumSeries = (key: NumericKey): number[] =>
-    resp?.data?.map((point) => {
-      const value = point[key];
-      return typeof value === 'number' ? value : 0;
-    }) ?? [];
-
-  const tempData = useMemo(
-    () => ({
-      labels,
-      datasets: [{ type: 'line', label: 'Temperatura (°C)', data: toNumSeries('temperatureAvg') }]
-    }),
-    [labels, resp]
-  );
-
-  const ventoData = useMemo(
-    () => ({
-      labels,
-      datasets: [{ type: 'bar', label: 'Velocidade do Vento (m/s)', data: toNumSeries('windSpeedAvg') }]
-    }),
-    [labels, resp]
-  );
-
-  const precipCumulative = useMemo(() => {
-    const series = toNumSeries('precipitationSum');
-    let acc = 0;
-    return series.map((value) => (acc += value));
-  }, [resp]);
-
-  const precipTargetLine = useMemo(
-    () => labels.map(() => PRECIP_TARGET_MM),
-    [labels]
-  );
-
-  const precipData = useMemo(
-    () => ({
-      labels,
-      datasets: [
-        {
-          type: 'line',
-          label: 'Precipitação acumulada (mm)',
-          data: precipCumulative,
-          fill: true,
-          tension: 0.3
-        },
-        {
-          type: 'line',
-          label: `Meta / Referência (${PRECIP_TARGET_MM} mm)`,
-          data: precipTargetLine,
-          fill: false,
-          borderDash: [8, 6],
-          pointRadius: 0
-        }
-      ]
-    }),
-    [labels, precipCumulative, precipTargetLine]
-  );
-
-  const umiData = useMemo(
-    () => ({
-      labels,
-      datasets: [
-        {
-          type: 'line',
-          label: 'Umidade (%) [área]',
-          data: toNumSeries('humidityAvg'),
-          fill: true,
-          tension: 0.3
-        },
-        {
-          type: 'line',
-          label: 'Temperatura (°C)',
-          data: toNumSeries('temperatureAvg'),
-          fill: false,
-          tension: 0.25
-        }
-      ]
-    }),
-    [labels, resp]
-  );
 
   const tempRangeData = useMemo(
     () => ({
@@ -251,19 +194,6 @@ export default function GraficosPage() {
     [solarLabels, solarResp, solarCumulative]
   );
 
-  const rangeLabel = useMemo(() => {
-    if (!start || !end) return '';
-    const from = format(start, 'dd/MM/yyyy');
-    const to = format(end, 'dd/MM/yyyy');
-    const granularity =
-      resp?.granularity === 'HOURLY'
-        ? 'por hora'
-        : resp?.granularity === 'DAILY'
-          ? 'por dia'
-          : 'auto';
-    return `Período: ${from} até ${to} (${granularity})`;
-  }, [start, end, resp?.granularity]);
-
   const baseOpts = useMemo(
     () => ({
       maintainAspectRatio: false,
@@ -305,9 +235,14 @@ export default function GraficosPage() {
     [baseOpts]
   );
 
+  const rangeLabel = useMemo(() => {
+    if (!start || !end) return '';
+    return `Período: ${format(start, 'dd/MM/yyyy')} até ${format(end, 'dd/MM/yyyy')}`;
+  }, [start, end]);
+
   return (
     <div className="p-4 max-w-full">
-      <h2 className="text-2xl font-semibold mb-3">Análise Gráfica de Dados</h2>
+      <h2 className="text-2xl font-semibold mb-3">Consolidados</h2>
 
       <div className="grid gap-3 md:grid-cols-2">
         <div>
@@ -323,31 +258,42 @@ export default function GraficosPage() {
       {start && end && <p className="text-sm text-gray-500 mt-3">{rangeLabel}</p>}
       {error && <Message className="mt-3" severity="error" text={error} />}
 
-      <div className="charts-grid mt-6">
-        <div className="chart-card">
-          <Chart type="line" data={tempData} options={withTitle('Temperatura Média (°C)')} className="w-full h-full" />
-        </div>
+      {!start || !end ? (
+        <Message className="mt-4" severity="warn" text="Selecione uma data inicial e uma data final para visualizar o painel." />
+      ) : (
+        <>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4 mt-6">
+            {DASHBOARD_CARDS.map((card) => (
+              <div
+                key={card.key}
+                className="surface-card border-round-xl p-4 shadow-2 border-1 surface-border"
+              >
+                <div className="flex items-start justify-content-between gap-3">
+                  <div>
+                    <div className="text-600 text-sm mb-2">{card.label}</div>
+                    <div className="text-900 text-2xl font-semibold">
+                      {loading ? 'Carregando...' : formatMetric(dashboard?.[card.key], card.suffix)}
+                    </div>
+                  </div>
+                  <span className="inline-flex align-items-center justify-content-center border-circle bg-primary text-white w-3rem h-3rem">
+                    <i className={`${card.icon} text-base`} />
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        <div className="chart-card">
-          <Chart type="bar" data={ventoData} options={withTitle('Velocidade Média do Vento (m/s)')} className="w-full h-full" />
-        </div>
+          <div className="charts-grid mt-6">
+            <div className="chart-card">
+              <Chart type="line" data={tempRangeData} options={withTitle('Temperatura Mínima, Média e Máxima por Dia')} className="w-full h-full" />
+            </div>
 
-        <div className="chart-card">
-          <Chart data={precipData} options={withTitle('Precipitação Acumulada (mm) - Hyetograma + Meta')} className="w-full h-full" />
-        </div>
-
-        <div className="chart-card">
-          <Chart data={umiData} options={withTitle('Umidade (%) - Área + Temperatura (°C)')} className="w-full h-full" />
-        </div>
-
-        <div className="chart-card chart-card-wide">
-          <Chart type="line" data={tempRangeData} options={withTitle('Temperatura Mínima, Média e Máxima por Dia')} className="w-full h-full" />
-        </div>
-
-        <div className="chart-card chart-card-wide">
-          <Chart data={solarData} options={solarOpts} className="w-full h-full" />
-        </div>
-      </div>
+            <div className="chart-card">
+              <Chart data={solarData} options={solarOpts} className="w-full h-full" />
+            </div>
+          </div>
+        </>
+      )}
 
       <style jsx>{`
         .charts-grid {
@@ -355,12 +301,9 @@ export default function GraficosPage() {
           grid-template-columns: 1fr;
           gap: 1.5rem;
         }
-        @media (min-width: 768px) {
+        @media (min-width: 1200px) {
           .charts-grid {
             grid-template-columns: 1fr 1fr;
-          }
-          .chart-card-wide {
-            grid-column: 1 / -1;
           }
         }
         .chart-card {
